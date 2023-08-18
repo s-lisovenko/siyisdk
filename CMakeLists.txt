@@ -56,11 +56,11 @@ message(STATUS "Build Type: ${CMAKE_BUILD_TYPE}")
 
 # Target
 add_library(${PROJECT_NAME} STATIC
-        src/Crc.cpp
-        src/Api.cpp
-        src/MessageParser.cpp
-        src/Connection.cpp
-        src/MessageBuilder.cpp)
+        Crc.cpp
+        Api.cpp
+        MessageParser.cpp
+        Connection.cpp
+        MessageBuilder.cpp)
 
 # Link libraries
 target_link_libraries(${PROJECT_NAME} PUBLIC Qt5::Network Qt5::Core)
