@@ -65,4 +65,4 @@ add_library(${PROJECT_NAME} STATIC
 # Link libraries
 target_link_libraries(${PROJECT_NAME} PUBLIC Qt5::Network Qt5::Core)
 
-target_include_directories(${PROJECT_NAME} INTERFACE ..)
+target_include_directories(${PROJECT_NAME} INTERFACE .)
