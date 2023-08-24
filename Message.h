@@ -20,6 +20,7 @@ struct FirmwareMessage
 struct HardwareIDMessage
 {
     QString hardwareID;
+    uint16_t modelId;
 };
 
 /**

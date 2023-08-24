@@ -22,7 +22,13 @@ QVariant FirmwareMessageParser::parse(const QByteArray& data) {
 QVariant HardwareIDMessageParser::parse(const QByteArray& data) {
     qCDebug(siyiMessageParser) << "Parsing hardware ID message " << data.toHex();
 
-    HardwareIDMessage hardwareIDMessage{data.toHex()};
+    HardwareIDMessage hardwareIDMessage;
+    hardwareIDMessage.hardwareID = data.toHex();
+
+    // Read the data from the stream into the struct fields
+    QDataStream stream(data);
+    stream >> hardwareIDMessage.modelId;
+
     return QVariant::fromValue(hardwareIDMessage);
 }
 

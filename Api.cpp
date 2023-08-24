@@ -141,16 +141,14 @@ void Api::timerEvent(QTimerEvent* e) {
 }
 
 void Api::getCameraType() {
-    static QMap<int, CameraType> cameraTypeMap{
+    static QMap<uint16_t, CameraType> cameraTypeMap{
         {0x6B, CameraType::ZR10},
         {0x73, CameraType::A8Mini},
         {0x75, CameraType::A2Mini},
         {0x78, CameraType::ZR30},
         {0x7A, CameraType::ZT30},
     };
-    // Get first 2 digits from hardwareIDMessage as camera type
-    auto cameraType = hardwareIDMessage.hardwareID.midRef(0, 2).toInt();
-    _cameraType = cameraTypeMap.value(cameraType, CameraType::Unknown);
+    _cameraType = cameraTypeMap.value(hardwareIDMessage.modelId, CameraType::Unknown);
 }
 
 } // namespace siyi
