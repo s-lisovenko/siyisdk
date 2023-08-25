@@ -42,7 +42,9 @@ public:
      * @brief Check if Siyi API is initialized
      * @return True if Siyi API is initialized, false otherwise
      */
-    [[nodiscard]] bool initialized() const { return _cameraType != CameraType::Unknown; }
+    [[nodiscard]] bool initialized() const {
+        return _cameraType != CameraType::Unknown || !hardwareIDMessage.hardwareID.isEmpty();
+    }
 
     /**
      * @brief Set gimbal angles
