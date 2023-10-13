@@ -115,6 +115,35 @@ bool Api::toggleRecordingVideo() {
     return true;
 }
 
+bool Api::setCameraMode(uint8_t mode) {
+    switch (mode) {
+    case 0: {
+        return takePhoto();
+    }
+    case 2: {
+        return toggleRecordingVideo();
+    }
+    case 3: {
+        auto message = _messageBuilder.buildMotionLockModeRequestMessage();
+        emit sendMessage(message);
+        return true;
+    }
+    case 4: {
+        auto message = _messageBuilder.buildMotionFollowModeRequestMessage();
+        emit sendMessage(message);
+        return true;
+    }
+    case 5: {
+        auto message = _messageBuilder.buildMotionFPVModeRequestMessage();
+        emit sendMessage(message);
+        return true;
+    }
+    default:
+        break;
+    }
+    return false;
+}
+
 bool Api::zoom(uint8_t zoomValue) {
     auto message = _messageBuilder.buildAbsoluteZoomRequestMessage(zoomValue);
     emit sendMessage(message);

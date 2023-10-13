@@ -80,6 +80,12 @@ public:
      */
     [[nodiscard]] bool toggleRecordingVideo();
 
+    /**
+     * @brief Set camera mode (lock, fpv, follow)
+     * @return True if message was sent, false otherwise
+     */
+    [[nodiscard]] bool setCameraMode(uint8_t mode);
+
     // Zoom messages
     bool zoom(uint8_t zoomValue);
     bool zoomDirection(int8_t direction);
