@@ -9,9 +9,9 @@ namespace {
 constexpr auto kGimbalAttitudeTimeout{100}; // Update gimbal timeout in ms
 }
 
-Api::Api(QObject* parent)
+Api::Api(const QString& serverIp, quint16 port, QObject* parent)
     : QObject(parent) {
-    init();
+    init(serverIp, port);
 
     // Send messages about hardware ID and firmware
     auto message = _messageBuilder.buildHardwareIDRequestMessage();
@@ -24,9 +24,9 @@ Api::~Api() {
     delete _siyiConnection;
 }
 
-void Api::init() {
+void Api::init(const QString& serverIp, quint16 port) {
     // Create Connection
-    _siyiConnection = new Connection(_messageBuilder);
+    _siyiConnection = new Connection(_messageBuilder, serverIp, port);
 
     // Receive message for processing
     // connect(_siyiConnection, &Connection::messageReceived, this, &Api::processSdkMessage);

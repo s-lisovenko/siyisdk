@@ -31,7 +31,7 @@ public:
 
 public:
     // Instance singleton
-    static Api& instance() {
+    static Api& instance(const QString& serverIp = "192.168.144.25", quint16 port = 37260) {
         static Api instance;
         return instance;
     }
@@ -106,13 +106,13 @@ protected:
     void timerEvent(QTimerEvent* e) override;
 
 private:
-    explicit Api(QObject* parent = nullptr);
+    explicit Api(const QString& serverIp = "192.168.144.25", quint16 port = 37260, QObject* parent = nullptr);
 
     /**
      * @brief Initialize Siyi API
      * @return True if initialization was successful, false otherwise
      */
-    void init();
+    void init(const QString& serverIp = "192.168.144.25", quint16 port = 37260);
 
     // Additional message handlers that need to be called after hardware ID message parsing
     void getCameraType();
