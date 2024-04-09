@@ -32,7 +32,7 @@ public:
 public:
     // Instance singleton
     static Api& instance(const QString& serverIp = "192.168.144.25", quint16 port = 37260) {
-        static Api instance;
+        static Api instance(serverIp, port);
         return instance;
     }
 
