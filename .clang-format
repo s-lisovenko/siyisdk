@@ -1,33 +1,34 @@
 ---
 Language: Cpp
 Standard: c++17
-ColumnLimit: 110
+ColumnLimit: 140
+TabWidth: 4
+UseTab: Never
 AccessModifierOffset: -4
 AlignAfterOpenBracket: Align
-AlignConsecutiveAssignments: None
-AlignConsecutiveDeclarations: None
+AlignConsecutiveAssignments: Consecutive
+AlignConsecutiveDeclarations: true
 AlignEscapedNewlines: DontAlign
-AlignOperands: true
+AlignOperands: Align
 AlignTrailingComments: true
-AllowAllParametersOfDeclarationOnNextLine: true
+AllowAllParametersOfDeclarationOnNextLine: false
 AllowShortBlocksOnASingleLine: Never
 AllowShortCaseLabelsOnASingleLine: false
 AllowShortFunctionsOnASingleLine: Inline
 AllowShortIfStatementsOnASingleLine: false
 AllowShortLoopsOnASingleLine: false
-AlwaysBreakAfterReturnType: None
 AlwaysBreakBeforeMultilineStrings: false
 AlwaysBreakTemplateDeclarations: Yes
 BinPackArguments: false
 BinPackParameters: false
 BraceWrapping:
-  AfterClass: true
+  AfterClass: false
   AfterControlStatement: Never
   AfterEnum: false
   AfterFunction: false
   AfterNamespace: false
   AfterObjCDeclaration: false
-  AfterStruct: true
+  AfterStruct: false
   AfterUnion: false
   BeforeCatch: false
   BeforeElse: false
@@ -65,6 +66,7 @@ IncludeIsMainRegex: '(Test)?$'
 IndentCaseLabels: false
 IndentWidth: 4
 IndentWrappedFunctionNames: false
+InsertBraces: true
 JavaScriptQuotes: Leave
 JavaScriptWrapImports: true
 KeepEmptyLinesAtTheStartOfBlocks: false
@@ -93,10 +95,8 @@ SpaceBeforeAssignmentOperators: true
 SpaceBeforeParens: ControlStatements
 SpaceInEmptyParentheses: false
 SpacesBeforeTrailingComments: 1
-SpacesInAngles: false
+SpacesInAngles: Never
 SpacesInContainerLiterals: false
 SpacesInCStyleCastParentheses: false
 SpacesInParentheses: false
 SpacesInSquareBrackets: false
-TabWidth: 4
-UseTab: Never

@@ -42,13 +42,12 @@ set(CMAKE_AUTORCC ON)
 set(CMAKE_AUTOUIC ON)
 
 # Find packages
-find_package(Qt5 REQUIRED COMPONENTS
-        Core
-        Network
-)
+find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Core)
+find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Core Network)
 
 # Status messages
 message(STATUS "Build Type: ${CMAKE_BUILD_TYPE}")
+message(STATUS "Using Qt${QT_VERSION_MAJOR}")
 
 #######################################################
 #                   Target
@@ -56,13 +55,19 @@ message(STATUS "Build Type: ${CMAKE_BUILD_TYPE}")
 
 # Target
 add_library(${PROJECT_NAME} STATIC
-        Crc.cpp
-        Api.cpp
-        MessageParser.cpp
-        Connection.cpp
-        MessageBuilder.cpp)
+    src/Crc.h
+    src/Crc.cpp
+    src/CameraApi.h
+    src/CameraApi.cpp
+    src/MessageParser.h
+    src/MessageParser.cpp
+    src/Connection.h
+    src/Connection.cpp
+    src/MessageBuilder.h
+    src/MessageBuilder.cpp
+)
 
 # Link libraries
-target_link_libraries(${PROJECT_NAME} PUBLIC Qt5::Network Qt5::Core)
+target_link_libraries(${PROJECT_NAME} PUBLIC Qt${QT_VERSION_MAJOR}::Network Qt${QT_VERSION_MAJOR}::Core)
 
-target_include_directories(${PROJECT_NAME} INTERFACE .)
+target_include_directories(${PROJECT_NAME} INTERFACE src/)

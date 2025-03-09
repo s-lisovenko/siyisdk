@@ -1,7 +1,9 @@
-#include "Api.h"
+#include "CameraApi.h"
 
-#include <thread>
 #include <QThread>
+
+#include "Connection.h"
+#include "MessageBuilder.h"
 
 namespace siyi {
 
@@ -9,22 +11,23 @@ namespace {
 constexpr auto kGimbalAttitudeTimeout{100}; // Update gimbal timeout in ms
 }
 
-Api::Api(const QString& serverIp, quint16 port, QObject* parent)
-    : QObject(parent) {
+CameraApi::CameraApi(const QString& serverIp, quint16 port, QObject* parent)
+    : QObject(parent)
+    , _messageBuilder(std::make_shared<MessageBuilder>()) {
     init(serverIp, port);
 
     // Send messages about hardware ID and firmware
-    auto message = _messageBuilder.buildHardwareIDRequestMessage();
+    auto message = _messageBuilder->buildHardwareIDRequestMessage();
     emit sendMessage(message);
 }
 
-Api::~Api() {
+CameraApi::~CameraApi() {
     _siyiConnection->thread()->quit();
     _siyiConnection->thread()->wait();
     delete _siyiConnection;
 }
 
-void Api::init(const QString& serverIp, quint16 port) {
+void CameraApi::init(const QString& serverIp, quint16 port) {
     // Create Connection
     _siyiConnection = new Connection(_messageBuilder, serverIp, port);
 
@@ -35,7 +38,7 @@ void Api::init(const QString& serverIp, quint16 port) {
     });
 
     // Send message to camera
-    connect(this, &Api::sendMessage, _siyiConnection, &Connection::sendMessage);
+    connect(this, &CameraApi::sendMessage, _siyiConnection, &Connection::sendMessage);
 
     // Create thread and move connection worker to it
     auto* connectionThread = new QThread(this);
@@ -47,7 +50,7 @@ void Api::init(const QString& serverIp, quint16 port) {
     _gimbalAttitudeTimer = startTimer(kGimbalAttitudeTimeout);
 }
 
-void Api::processSdkMessage(const QVariant& message, quint8 command) {
+void CameraApi::processSdkMessage(const QVariant& message, quint8 command) {
     switch (static_cast<Command>(command)) {
     case Command::UNKNOWN:
     case Command::AUTO_FOCUS:
@@ -83,39 +86,38 @@ void Api::processSdkMessage(const QVariant& message, quint8 command) {
     }
 }
 
-bool Api::setAngles(float pan, float tilt) {
-    auto message = _messageBuilder.buildSetGimbalControlAngleRequestMessage(static_cast<int16_t>(pan * 10),
-                                                                            static_cast<int16_t>(tilt * 10));
+bool CameraApi::setAngles(float pan, float tilt) {
+    auto message = _messageBuilder->buildSetGimbalControlAngleRequestMessage(static_cast<int16_t>(pan * 10),
+                                                                             static_cast<int16_t>(tilt * 10));
     emit sendMessage(message);
     return true;
 }
 
-bool Api::setGimbalCenter() {
-    auto message = _messageBuilder.buildGimbalCenterRequestMessage();
+bool CameraApi::setGimbalCenter() {
+    auto message = _messageBuilder->buildGimbalCenterRequestMessage();
     emit sendMessage(message);
     return true;
 }
 
-bool Api::setRates(float panRate, float tiltRate) {
-    auto message = _messageBuilder.buildGimbalRotationRequestMessage(static_cast<int8_t>(panRate),
-                                                                     static_cast<int8_t>(tiltRate));
+bool CameraApi::setRates(float panRate, float tiltRate) {
+    auto message = _messageBuilder->buildGimbalRotationRequestMessage(static_cast<int8_t>(panRate), static_cast<int8_t>(tiltRate));
     emit sendMessage(message);
     return true;
 }
 
-bool Api::takePhoto() {
-    auto message = _messageBuilder.buildTakePhotoRequestMessage();
+bool CameraApi::takePhoto() {
+    auto message = _messageBuilder->buildTakePhotoRequestMessage();
     emit sendMessage(message);
     return true;
 }
 
-bool Api::toggleRecordingVideo() {
-    auto message = _messageBuilder.buildStartStopRecordingRequestMessage();
+bool CameraApi::toggleRecordingVideo() {
+    auto message = _messageBuilder->buildStartStopRecordingRequestMessage();
     emit sendMessage(message);
     return true;
 }
 
-bool Api::setCameraMode(uint8_t mode) {
+bool CameraApi::setCameraMode(uint8_t mode) {
     switch (mode) {
     case 0: {
         return takePhoto();
@@ -124,17 +126,17 @@ bool Api::setCameraMode(uint8_t mode) {
         return toggleRecordingVideo();
     }
     case 3: {
-        auto message = _messageBuilder.buildMotionLockModeRequestMessage();
+        auto message = _messageBuilder->buildMotionLockModeRequestMessage();
         emit sendMessage(message);
         return true;
     }
     case 4: {
-        auto message = _messageBuilder.buildMotionFollowModeRequestMessage();
+        auto message = _messageBuilder->buildMotionFollowModeRequestMessage();
         emit sendMessage(message);
         return true;
     }
     case 5: {
-        auto message = _messageBuilder.buildMotionFPVModeRequestMessage();
+        auto message = _messageBuilder->buildMotionFPVModeRequestMessage();
         emit sendMessage(message);
         return true;
     }
@@ -144,32 +146,32 @@ bool Api::setCameraMode(uint8_t mode) {
     return false;
 }
 
-bool Api::zoom(uint8_t zoomValue) {
-    auto message = _messageBuilder.buildAbsoluteZoomRequestMessage(zoomValue);
+bool CameraApi::zoom(uint8_t zoomValue) {
+    auto message = _messageBuilder->buildAbsoluteZoomRequestMessage(zoomValue);
     emit sendMessage(message);
 
     return true;
 }
 
-bool Api::zoomDirection(int8_t direction) {
-    auto message = _messageBuilder.buildManualZoomRequestMessage(direction);
+bool CameraApi::zoomDirection(int8_t direction) {
+    auto message = _messageBuilder->buildManualZoomRequestMessage(direction);
     emit sendMessage(message);
     return true;
 }
 
-bool Api::manualFocus(int8_t direction) {
-    auto message = _messageBuilder.buildManualFocusShotRequestMessage(direction);
+bool CameraApi::manualFocus(int8_t direction) {
+    auto message = _messageBuilder->buildManualFocusShotRequestMessage(direction);
     emit sendMessage(message);
     return true;
 }
 
-void Api::timerEvent(QTimerEvent* e) {
+void CameraApi::timerEvent(QTimerEvent* e) {
     if (initialized() && e->timerId() == _gimbalAttitudeTimer) {
-        emit sendMessage(_messageBuilder.buildAcquireGimbalAttitudeRequestMessage());
+        emit sendMessage(_messageBuilder->buildAcquireGimbalAttitudeRequestMessage());
     }
 }
 
-void Api::getCameraType() {
+void CameraApi::getCameraType() {
     static QMap<uint16_t, CameraType> cameraTypeMap{
         {0x6B, CameraType::ZR10},
         {0x73, CameraType::A8Mini},

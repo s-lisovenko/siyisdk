@@ -1,5 +1,4 @@
-#ifndef MESSAGEPARSER_H
-#define MESSAGEPARSER_H
+#pragma once
 
 #include <tuple>
 #include <QByteArray>
@@ -13,15 +12,14 @@ namespace siyi {
 /**
  * Response message
  */
-struct ResponseMessageParser
-{
+struct ResponseMessageParser {
     virtual ~ResponseMessageParser() = default;
     /**
      * Parse message
      * @param data
      */
-    virtual QVariant parse(const QByteArray& data) = 0;
-    [[nodiscard]] virtual Command command() const = 0;
+    virtual QVariant              parse(const QByteArray& data) = 0;
+    [[nodiscard]] virtual Command command() const               = 0;
 
     bool success{false};
 };
@@ -29,63 +27,56 @@ struct ResponseMessageParser
 /**
  * The FirmwareMessage
  */
-struct FirmwareMessageParser : public ResponseMessageParser
-{
-    QVariant parse(const QByteArray& data) override;
+struct FirmwareMessageParser : public ResponseMessageParser {
+    QVariant              parse(const QByteArray& data) override;
     [[nodiscard]] Command command() const override { return Command::ACQUIRE_FW_VER; }
 };
 
 /**
  * The HardwareIDMessage
  */
-struct HardwareIDMessageParser : public ResponseMessageParser
-{
-    QVariant parse(const QByteArray& data) override;
+struct HardwareIDMessageParser : public ResponseMessageParser {
+    QVariant              parse(const QByteArray& data) override;
     [[nodiscard]] Command command() const override { return Command::ACQUIRE_HW_ID; }
 };
 
 /**
  * The AutoFocusMessage
  */
-struct AutoFocusMessageParser : public ResponseMessageParser
-{
-    QVariant parse(const QByteArray& data) override;
+struct AutoFocusMessageParser : public ResponseMessageParser {
+    QVariant              parse(const QByteArray& data) override;
     [[nodiscard]] Command command() const override { return Command::AUTO_FOCUS; }
 };
 
 /**
  * The ManualZoomMessage
  */
-struct ManualZoomMessageParser : public ResponseMessageParser
-{
-    QVariant parse(const QByteArray& data) override;
+struct ManualZoomMessageParser : public ResponseMessageParser {
+    QVariant              parse(const QByteArray& data) override;
     [[nodiscard]] Command command() const override { return Command::MANUAL_ZOOM; }
 };
 
 /**
  * The AbsoluteZoomMessage
  */
-struct AbsoluteZoomMessageParser : public ResponseMessageParser
-{
-    QVariant parse(const QByteArray& data) override;
+struct AbsoluteZoomMessageParser : public ResponseMessageParser {
+    QVariant              parse(const QByteArray& data) override;
     [[nodiscard]] Command command() const override { return Command::ABSOLUTE_ZOOM; }
 };
 
 /**
  * The ManualFocusMessage
  */
-struct ManualFocusMessageParser : public ResponseMessageParser
-{
-    QVariant parse(const QByteArray& data) override;
+struct ManualFocusMessageParser : public ResponseMessageParser {
+    QVariant              parse(const QByteArray& data) override;
     [[nodiscard]] Command command() const override { return Command::MANUAL_FOCUS; }
 };
 
 /**
  * The GimbalRotationMessage
  */
-struct GimbalRotationMessageParser : public ResponseMessageParser
-{
-    QVariant parse(const QByteArray& data) override;
+struct GimbalRotationMessageParser : public ResponseMessageParser {
+    QVariant              parse(const QByteArray& data) override;
     [[nodiscard]] Command command() const override { return Command::GIMBAL_ROTATION; }
 };
 
@@ -93,18 +84,16 @@ struct GimbalRotationMessageParser : public ResponseMessageParser
  * The CenterMessage
  */
 
-struct GimbalCenterMessageParser : public ResponseMessageParser
-{
-    QVariant parse(const QByteArray& data) override;
+struct GimbalCenterMessageParser : public ResponseMessageParser {
+    QVariant              parse(const QByteArray& data) override;
     [[nodiscard]] Command command() const override { return Command::GIMBAL_CENTER; }
 };
 
 /**
  * The FunctionFeedbackMessage
  */
-struct FunctionFeedbackMessageParser : public ResponseMessageParser
-{
-    QVariant parse(const QByteArray& data) override;
+struct FunctionFeedbackMessageParser : public ResponseMessageParser {
+    QVariant              parse(const QByteArray& data) override;
     [[nodiscard]] Command command() const override { return Command::FUNC_FEEDBACK_INFO; }
 
     // 0: Success
@@ -120,27 +109,22 @@ struct FunctionFeedbackMessageParser : public ResponseMessageParser
 /**
  * The GimbalAttitudeMessage
  */
-struct GimbalAttitudeMessageParser : public ResponseMessageParser
-{
-    QVariant parse(const QByteArray& data) override;
+struct GimbalAttitudeMessageParser : public ResponseMessageParser {
+    QVariant              parse(const QByteArray& data) override;
     [[nodiscard]] Command command() const override { return Command::ACQUIRE_GIMBAL_ATT; }
 };
 
 /**
  * The GimbalControlAngleMessage
  */
-struct GimbalControlAngleMessageParser : public ResponseMessageParser
-{
-    QVariant parse(const QByteArray& data) override;
+struct GimbalControlAngleMessageParser : public ResponseMessageParser {
+    QVariant              parse(const QByteArray& data) override;
     [[nodiscard]] Command command() const override { return Command::GIMBAL_CONTROL_ANGLE; }
 };
 
-struct CameraStatusInfoMessageParser : public ResponseMessageParser
-{
-    QVariant parse(const QByteArray& data) override;
+struct CameraStatusInfoMessageParser : public ResponseMessageParser {
+    QVariant              parse(const QByteArray& data) override;
     [[nodiscard]] Command command() const override { return Command::ACQUIRE_GIMBAL_INFO; }
 };
 
 } // namespace siyi
-
-#endif // MESSAGEPARSER_H

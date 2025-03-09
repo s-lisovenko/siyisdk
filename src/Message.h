@@ -1,5 +1,4 @@
-#ifndef MESSAGE_H
-#define MESSAGE_H
+#pragma once
 
 #include <cstdint>
 #include <QMetaType>
@@ -7,8 +6,7 @@
 /**
  * The FirmwareMessage
  */
-struct FirmwareMessage
-{
+struct FirmwareMessage {
     uint32_t boardVersion{0};
     uint32_t gimbalFirmwareVersion{0};
     uint32_t zoomFirmwareVersion{0};
@@ -17,25 +15,22 @@ struct FirmwareMessage
 /**
  * The HardwareIDMessage
  */
-struct HardwareIDMessage
-{
-    QString hardwareID;
+struct HardwareIDMessage {
+    QString  hardwareID;
     uint16_t modelId;
 };
 
 /**
  * The AutoFocusMessage
  */
-struct AutoFocusMessage
-{
+struct AutoFocusMessage {
     bool success{false};
 };
 
 /**
  * The ManualZoomMessage
  */
-struct ManualZoomMessage
-{
+struct ManualZoomMessage {
     [[nodiscard]] float actualZoom() const { return static_cast<float>(zoomLevel) / 10.0f; }
 
     uint16_t zoomLevel{0};
@@ -45,24 +40,21 @@ struct ManualZoomMessage
  * The AbsoluteZoomMessage
  */
 
-struct AbsoluteZoomMessage
-{
+struct AbsoluteZoomMessage {
     uint8_t absoluteMovementAsk{0};
 };
 
 /**
  * The ManualFocusMessage
  */
-struct ManualFocusMessage
-{
+struct ManualFocusMessage {
     uint8_t state{0}; // 1: Success, 0: Fail
 };
 
 /**
  * The GimbalRotationMessage
  */
-struct GimbalRotationMessage
-{
+struct GimbalRotationMessage {
     uint8_t state{0}; // 1: Success, 0: Fail
 };
 
@@ -70,16 +62,14 @@ struct GimbalRotationMessage
  * The CenterMessage
  */
 
-struct GimbalCenterMessage
-{
+struct GimbalCenterMessage {
     uint8_t state{0}; // 1: Success, 0: Fail
 };
 
 /**
  * The FunctionFeedbackMessage
  */
-struct FunctionFeedbackMessage
-{
+struct FunctionFeedbackMessage {
     // 0: Success
     // 1: Fail to take a photo (Please check
     // if TF card is inserted)
@@ -93,8 +83,7 @@ struct FunctionFeedbackMessage
 /**
  * The GimbalAttitudeMessage
  */
-struct GimbalAttitudeMessage
-{
+struct GimbalAttitudeMessage {
     [[nodiscard]] float actualYaw() const { return static_cast<float>(yaw) / 10.0f; }
     [[nodiscard]] float actualPitch() const { return static_cast<float>(pitch) / 10.0f; }
     [[nodiscard]] float actualRoll() const { return static_cast<float>(roll) / 10.0f; }
@@ -113,8 +102,7 @@ struct GimbalAttitudeMessage
 /**
  * The GimbalControlAngleMessage
  */
-struct GimbalControlAngleMessage
-{
+struct GimbalControlAngleMessage {
     [[nodiscard]] float actualYaw() const { return static_cast<float>(yaw) / 10.0f; }
     [[nodiscard]] float actualPitch() const { return static_cast<float>(pitch) / 10.0f; }
     [[nodiscard]] float actualRoll() const { return static_cast<float>(roll) / 10.0f; }
@@ -125,35 +113,34 @@ struct GimbalControlAngleMessage
 };
 
 // Camera status information
-struct CameraStatusInfoMessage
-{
+struct CameraStatusInfoMessage {
     enum RecordingStatus {
-        RecordingOn = 0,
-        RecordingOff = 1,
+        RecordingOn     = 0,
+        RecordingOff    = 1,
         TFCardSlotEmpty = 2,
-        DataLoss = 3,
+        DataLoss        = 3,
         Undefined,
     };
 
     enum class GimbalMotionMode {
-        Lock = 0,
+        Lock   = 0,
         Follow = 1,
-        FPV = 2,
+        FPV    = 2,
         Undefined,
     };
 
     enum class GimbalMounting {
-        Reserved = 0,
-        Normal = 1,
+        Reserved   = 0,
+        Normal     = 1,
         UpsideDown = 2,
         Undefined,
     };
 
-    bool hdrOn{false};
-    RecordingStatus recordingStatus{RecordingStatus::Undefined};
+    bool             hdrOn{false};
+    RecordingStatus  recordingStatus{RecordingStatus::Undefined};
     GimbalMotionMode gimbalMotionMode{GimbalMotionMode::Undefined};
-    GimbalMounting gimbalMounting{GimbalMounting::Undefined};
-    bool hdmiOnCvbsOff{false};
+    GimbalMounting   gimbalMounting{GimbalMounting::Undefined};
+    bool             hdmiOnCvbsOff{false};
 };
 
 Q_DECLARE_METATYPE(FirmwareMessage)
@@ -168,5 +155,3 @@ Q_DECLARE_METATYPE(FunctionFeedbackMessage)
 Q_DECLARE_METATYPE(GimbalAttitudeMessage)
 Q_DECLARE_METATYPE(GimbalControlAngleMessage)
 Q_DECLARE_METATYPE(CameraStatusInfoMessage)
-
-#endif // MESSAGE_H

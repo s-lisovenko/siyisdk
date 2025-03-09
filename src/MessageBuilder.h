@@ -1,5 +1,4 @@
-#ifndef MESSAGEBUILDER_H
-#define MESSAGEBUILDER_H
+#pragma once
 
 #include <cstdint>
 #include <tuple>
@@ -9,8 +8,7 @@
 
 namespace siyi {
 
-class MessageBuilder
-{
+class MessageBuilder {
 public:
     QByteArray buildFirmwareRequestMessage();
     QByteArray buildHardwareIDRequestMessage();
@@ -103,5 +101,3 @@ private:
 };
 
 } // namespace siyi
-
-#endif // MESSAGEBUILDER_H

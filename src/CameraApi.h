@@ -1,15 +1,17 @@
-#ifndef API_H
-#define API_H
+#pragma once
 
+#include <memory>
 #include <QObject>
 #include <QTimerEvent>
 
-#include "Connection.h"
+#include "Message.h"
 
 namespace siyi {
 
-class Api : public QObject
-{
+class Connection;
+class MessageBuilder;
+
+class CameraApi : public QObject {
     Q_OBJECT
 
 public:
@@ -22,29 +24,27 @@ public:
         Unknown,
     };
 
-    FirmwareMessage firmwareMessage;
-    HardwareIDMessage hardwareIDMessage;
-    ManualZoomMessage manualZoomMessage;
-    GimbalAttitudeMessage gimbalAttitudeMessage;
-    ManualFocusMessage manualFocusMessage;
+    FirmwareMessage         firmwareMessage;
+    HardwareIDMessage       hardwareIDMessage;
+    ManualZoomMessage       manualZoomMessage;
+    GimbalAttitudeMessage   gimbalAttitudeMessage;
+    ManualFocusMessage      manualFocusMessage;
     CameraStatusInfoMessage cameraStatusInfoMessage;
 
 public:
     // Instance singleton
-    static Api& instance(const QString& serverIp = "192.168.144.25", quint16 port = 37260) {
-        static Api instance(serverIp, port);
+    static CameraApi& instance(const QString& serverIp = "192.168.144.25", quint16 port = 37260) {
+        static CameraApi instance(serverIp, port);
         return instance;
     }
 
-    ~Api() override;
+    ~CameraApi() override;
 
     /**
      * @brief Check if Siyi API is initialized
      * @return True if Siyi API is initialized, false otherwise
      */
-    [[nodiscard]] bool initialized() const {
-        return _cameraType != CameraType::Unknown || !hardwareIDMessage.hardwareID.isEmpty();
-    }
+    [[nodiscard]] bool initialized() const { return _cameraType != CameraType::Unknown || !hardwareIDMessage.hardwareID.isEmpty(); }
 
     /**
      * @brief Set gimbal angles
@@ -106,7 +106,7 @@ protected:
     void timerEvent(QTimerEvent* e) override;
 
 private:
-    explicit Api(const QString& serverIp = "192.168.144.25", quint16 port = 37260, QObject* parent = nullptr);
+    explicit CameraApi(const QString& serverIp = "192.168.144.25", quint16 port = 37260, QObject* parent = nullptr);
 
     /**
      * @brief Initialize Siyi API
@@ -133,12 +133,10 @@ signals:
     void sendMessage(const QByteArray& message);
 
 private:
-    Connection* _siyiConnection{nullptr};
-    MessageBuilder _messageBuilder;
-    int _gimbalAttitudeTimer{-1};
-    CameraType _cameraType{CameraType::Unknown};
+    Connection*                     _siyiConnection{nullptr};
+    std::shared_ptr<MessageBuilder> _messageBuilder{nullptr};
+    int                             _gimbalAttitudeTimer{-1};
+    CameraType                      _cameraType{CameraType::Unknown};
 };
 
 } // namespace siyi
-
-#endif // API_H

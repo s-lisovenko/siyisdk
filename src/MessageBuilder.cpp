@@ -1,6 +1,7 @@
 #include "MessageBuilder.h"
 
 #include <QDataStream>
+#include <QIODevice>
 #include <QLoggingCategory>
 #include <QtEndian>
 
@@ -71,7 +72,7 @@ QByteArray MessageBuilder::buildGimbalCenterRequestMessage() {
 }
 
 QByteArray MessageBuilder::buildSetGimbalControlAngleRequestMessage(int16_t yawAngle, int16_t pitchAngle) {
-    QByteArray data;
+    QByteArray  data;
     QDataStream stream(&data, QIODevice::WriteOnly);
     stream << yawAngle;
     stream << pitchAngle;
@@ -149,7 +150,7 @@ std::tuple<QByteArray, size_t, Command, uint16_t> MessageBuilder::decode(const Q
     // Extract the header (revert the byte order) skip
 
     // Extract the control and data length
-    auto control = static_cast<uint8_t>(extractByte(message, 2));
+    auto control    = static_cast<uint8_t>(extractByte(message, 2));
     auto dataLength = static_cast<uint16_t>((static_cast<uint16_t>(extractByte(message, 4)) << 8)
                                             | static_cast<uint16_t>(extractByte(message, 3)));
 
@@ -170,9 +171,8 @@ std::tuple<QByteArray, size_t, Command, uint16_t> MessageBuilder::decode(const Q
     QByteArray data = message.mid(8, dataLength);
 
     // Extract the CRC (revert the byte order)
-    auto receivedCRC = static_cast<uint16_t>(
-        (static_cast<uint16_t>(extractByte(message, message.length() - 1)) << 8)
-        | static_cast<uint16_t>(extractByte(message, message.length() - 2)));
+    auto receivedCRC = static_cast<uint16_t>((static_cast<uint16_t>(extractByte(message, message.length() - 1)) << 8)
+                                             | static_cast<uint16_t>(extractByte(message, message.length() - 2)));
 
     // Calculate the CRC for the message (excluding the CRC itself)
     uint16_t calculatedCRC = Crc::calculateCRC16(message.mid(0, message.length() - 2), 0);
@@ -191,11 +191,11 @@ std::tuple<QByteArray, size_t, Command, uint16_t> MessageBuilder::decode(const Q
 }
 
 QByteArray MessageBuilder::encode(Command command, const QByteArray& data) {
-    uint16_t header = revertBytes(0x6655);
-    uint8_t control = 0x01;
-    uint16_t dataLength = revertBytes(data.length());
+    uint16_t header         = revertBytes(0x6655);
+    uint8_t  control        = 0x01;
+    uint16_t dataLength     = revertBytes(data.length());
     uint16_t sequenceNumber = revertBytes(getSequenceNumber());
-    uint8_t commandCode = static_cast<uint8_t>(command);
+    uint8_t  commandCode    = static_cast<uint8_t>(command);
 
     QByteArray message;
     message.append(reinterpret_cast<const char*>(&header), sizeof(header));
@@ -205,7 +205,7 @@ QByteArray MessageBuilder::encode(Command command, const QByteArray& data) {
     message.append(reinterpret_cast<const char*>(&commandCode), sizeof(commandCode));
     message.append(data);
 
-    uint16_t crc = Crc::calculateCRC16(message, 0);
+    uint16_t crc         = Crc::calculateCRC16(message, 0);
     uint16_t crcReversed = revertBytes(crc);
     message.append(reinterpret_cast<const char*>(&crcReversed), sizeof(crcReversed));
 

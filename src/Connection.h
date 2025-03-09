@@ -1,5 +1,4 @@
-#ifndef CONNECTION_H
-#define CONNECTION_H
+#pragma once
 
 #include <QMap>
 #include <QObject>
@@ -10,14 +9,13 @@
 
 namespace siyi {
 
-class Connection : public QObject
-{
+class Connection : public QObject {
     Q_OBJECT
 public:
-    explicit Connection(MessageBuilder& messageBuilder,
-                        const QString& serverIp = "192.168.144.25",
-                        quint16 port = 37260,
-                        QObject* parent = nullptr);
+    explicit Connection(std::shared_ptr<MessageBuilder>& messageBuilder,
+                        const QString&                   serverIp = "192.168.144.25",
+                        quint16                          port     = 37260,
+                        QObject*                         parent   = nullptr);
     ~Connection() override;
 
 signals:
@@ -47,14 +45,12 @@ private:
     void addParser(ResponseMessageParser* parser);
 
 private:
-    bool _connected{false};
-    MessageBuilder& _messageBuilder;
-    QHostAddress _cameraAddress;
-    quint16 _port;
-    QUdpSocket* _socket{nullptr};
+    bool                                  _connected{false};
+    std::shared_ptr<MessageBuilder>       _messageBuilder;
+    QHostAddress                          _cameraAddress;
+    quint16                               _port;
+    QUdpSocket*                           _socket{nullptr};
     QMap<Command, ResponseMessageParser*> _parsers;
 };
 
 } // namespace siyi
-
-#endif // CONNECTION_H

@@ -132,7 +132,7 @@ QVariant CameraStatusInfoMessageParser::parse(const QByteArray& data) {
     CameraStatusInfoMessage cameraStatusInfoMessage;
     // Read the data from the stream into the struct fields
     QDataStream stream(data);
-    uint8_t status;
+    uint8_t     status;
     stream >> status; // reserved
     stream >> status; // hdr status
     cameraStatusInfoMessage.hdrOn = status == 1;
