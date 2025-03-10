@@ -58,14 +58,14 @@ add_library(${PROJECT_NAME} STATIC
     include/Siyi.h
     include/CameraApi.h
     include/Message.h
+    include/MessageBuilder.h
     src/Crc.h
     src/Crc.cpp
     src/CameraApi.cpp
     src/MessageParser.h
     src/MessageParser.cpp
-    src/Connection.h
-    src/Connection.cpp
-    src/MessageBuilder.h
+    src/CommunicationWorker.h
+    src/CommunicationWorker.cpp
     src/MessageBuilder.cpp
 )
 

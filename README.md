@@ -1,6 +1,6 @@
 # Siyi Camera API
 
-The Siyi Camera API based on Qt. It allows you to control and interact with Siyi cameras and gimbals. It provides functionality to control gimbal angles, camera modes, take pictures, start/stop video recording, and zoom operations.
+The Siyi Camera API based on Qt. It allows you to control and interact with Siyi cameras and gimbals. It provides functionality to control gimbal angles, camera modes, take pictures, start/stop video recording, zoom operations etc.
 
 ## Example
 

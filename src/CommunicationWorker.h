@@ -1,7 +1,6 @@
 #pragma once
 
 #include <QMap>
-#include <QObject>
 #include <QUdpSocket>
 
 #include "MessageBuilder.h"
@@ -9,14 +8,15 @@
 
 namespace siyi {
 
-class Connection : public QObject {
+class CommunicationWorker : public QObject {
     Q_OBJECT
+
 public:
-    explicit Connection(std::shared_ptr<MessageBuilder>& messageBuilder,
+    explicit CommunicationWorker(std::shared_ptr<MessageBuilder>& messageBuilder,
                         const QString&                   serverIp = "192.168.144.25",
                         quint16                          port     = 37260,
                         QObject*                         parent   = nullptr);
-    ~Connection() override;
+    ~CommunicationWorker() override;
 
 signals:
     // Emit received message and command

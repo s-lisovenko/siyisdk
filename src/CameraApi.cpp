@@ -1,11 +1,13 @@
 #include "CameraApi.h"
 
-#include <QThread>
+#include <QLoggingCategory>
 
-#include "Connection.h"
+#include "CommunicationWorker.h"
 #include "MessageBuilder.h"
 
 namespace siyi {
+
+Q_LOGGING_CATEGORY(siyiSdkApi, "siyi.sdk.api")
 
 namespace {
 constexpr auto kGimbalAttitudeTimeout{100}; // Update gimbal timeout in ms
@@ -22,29 +24,29 @@ CameraApi::CameraApi(const QString& serverIp, quint16 port, QObject* parent)
 }
 
 CameraApi::~CameraApi() {
-    _siyiConnection->thread()->quit();
-    _siyiConnection->thread()->wait();
-    delete _siyiConnection;
+    _siyiCommunicationWorkerThread.quit();
+    _siyiCommunicationWorkerThread.wait();
+    delete _siyiCommunicationWorker;
 }
 
 void CameraApi::init(const QString& serverIp, quint16 port) {
     // Create Connection
-    _siyiConnection = new Connection(_messageBuilder, serverIp, port);
+    _siyiCommunicationWorker = new CommunicationWorker(_messageBuilder, serverIp, port);
 
     // Receive message for processing
     // connect(_siyiConnection, &Connection::messageReceived, this, &Api::processSdkMessage);
-    connect(_siyiConnection, &Connection::messageReceived, [this](const QVariant& message, quint8 command) {
+    connect(_siyiCommunicationWorker, &CommunicationWorker::messageReceived, [this](const QVariant& message, quint8 command) {
         processSdkMessage(message, command);
     });
 
     // Send message to camera
-    connect(this, &CameraApi::sendMessage, _siyiConnection, &Connection::sendMessage);
+    connect(this, &CameraApi::sendMessage, _siyiCommunicationWorker, &CommunicationWorker::sendMessage);
 
     // Create thread and move connection worker to it
-    auto* connectionThread = new QThread(this);
-    _siyiConnection->moveToThread(connectionThread);
-    connect(connectionThread, &QThread::started, _siyiConnection, &Connection::init);
-    connectionThread->start();
+    _siyiCommunicationWorker->moveToThread(&_siyiCommunicationWorkerThread);
+    connect(&_siyiCommunicationWorkerThread, &QThread::finished, _siyiCommunicationWorker, &QObject::deleteLater);
+    connect(&_siyiCommunicationWorkerThread, &QThread::started, _siyiCommunicationWorker, &CommunicationWorker::init);
+    _siyiCommunicationWorkerThread.start();
 
     // Start gimbal attitude timer
     _gimbalAttitudeTimer = startTimer(kGimbalAttitudeTimeout);

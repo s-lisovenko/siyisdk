@@ -1,14 +1,17 @@
-#include "Connection.h"
+#include "CommunicationWorker.h"
 
 #include <QLoggingCategory>
 
 #include "MessageParser.h"
 
-Q_LOGGING_CATEGORY(siyiSdk, "siyi.sdk")
+Q_LOGGING_CATEGORY(siyiSdkConnection, "siyi.sdk.connection")
 
 namespace siyi {
 
-Connection::Connection(std::shared_ptr<MessageBuilder>& messageBuilder, const QString& serverIp, quint16 port, QObject* parent)
+CommunicationWorker::CommunicationWorker(std::shared_ptr<MessageBuilder>& messageBuilder,
+                                         const QString&                   serverIp,
+                                         quint16                          port,
+                                         QObject*                         parent)
     : QObject(parent)
     , _messageBuilder(messageBuilder)
     , _cameraAddress(serverIp)
@@ -28,11 +31,11 @@ Connection::Connection(std::shared_ptr<MessageBuilder>& messageBuilder, const QS
     addParser(new CameraStatusInfoMessageParser);
 }
 
-Connection::~Connection() {
+CommunicationWorker::~CommunicationWorker() {
     qDeleteAll(_parsers);
 }
 
-void Connection::readPendingDatagrams() {
+void CommunicationWorker::readPendingDatagrams() {
     while (_socket->hasPendingDatagrams()) {
         QByteArray datagram;
         datagram.resize(static_cast<int>(_socket->pendingDatagramSize()));
@@ -44,33 +47,33 @@ void Connection::readPendingDatagrams() {
             auto message = _parsers.value(command)->parse(data);
             emit messageReceived(message, static_cast<quint8>(command));
         } else {
-            qCWarning(siyiSdk) << "No parser for command" << static_cast<int>(command);
+            qCWarning(siyiSdkConnection) << "No parser for command" << static_cast<int>(command);
         }
     }
 }
 
-void Connection::sendMessage(const QByteArray& message) {
+void CommunicationWorker::sendMessage(const QByteArray& message) {
     if (!_connected) {
-        qCWarning(siyiSdk) << "Not connected to camera";
+        qCWarning(siyiSdkConnection) << "Not connected to camera";
         return;
     }
     auto bytesSent = _socket->writeDatagram(message, _cameraAddress, _port);
     if (bytesSent == -1) {
-        qCWarning(siyiSdk) << "Failed to send data via UDP.";
+        qCWarning(siyiSdkConnection) << "Failed to send data via UDP.";
     }
 }
 
-void Connection::addParser(ResponseMessageParser* parser) {
+void CommunicationWorker::addParser(ResponseMessageParser* parser) {
     _parsers.insert(parser->command(), parser);
 }
 
-void Connection::init() {
+void CommunicationWorker::init() {
     _socket = new QUdpSocket(this);
     if (_socket->bind(QHostAddress::Any, _port)) {
         _connected = _socket->state() == QUdpSocket::SocketState::BoundState;
-        connect(_socket, &QUdpSocket::readyRead, this, &Connection::readPendingDatagrams);
+        connect(_socket, &QUdpSocket::readyRead, this, &CommunicationWorker::readPendingDatagrams);
     } else {
-        qCWarning(siyiSdk) << "Failed to bind to port";
+        qCWarning(siyiSdkConnection) << "Failed to bind to port";
     }
 }
 

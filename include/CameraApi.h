@@ -2,13 +2,14 @@
 
 #include <memory>
 #include <QObject>
+#include <QThread>
 #include <QTimerEvent>
 
 #include "Message.h"
 
 namespace siyi {
 
-class Connection;
+class CommunicationWorker;
 class MessageBuilder;
 
 class CameraApi : public QObject {
@@ -133,7 +134,8 @@ signals:
     void sendMessage(const QByteArray& message);
 
 private:
-    Connection*                     _siyiConnection{nullptr};
+    CommunicationWorker*            _siyiCommunicationWorker{nullptr};
+    QThread                         _siyiCommunicationWorkerThread;
     std::shared_ptr<MessageBuilder> _messageBuilder{nullptr};
     int                             _gimbalAttitudeTimer{-1};
     CameraType                      _cameraType{CameraType::Unknown};
