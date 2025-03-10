@@ -55,9 +55,11 @@ message(STATUS "Using Qt${QT_VERSION_MAJOR}")
 
 # Target
 add_library(${PROJECT_NAME} STATIC
+    include/Siyi.h
+    include/CameraApi.h
+    include/Message.h
     src/Crc.h
     src/Crc.cpp
-    src/CameraApi.h
     src/CameraApi.cpp
     src/MessageParser.h
     src/MessageParser.cpp
@@ -70,4 +72,8 @@ add_library(${PROJECT_NAME} STATIC
 # Link libraries
 target_link_libraries(${PROJECT_NAME} PUBLIC Qt${QT_VERSION_MAJOR}::Network Qt${QT_VERSION_MAJOR}::Core)
 
-target_include_directories(${PROJECT_NAME} INTERFACE src/)
+# Include directories
+target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_SOURCE_DIR}/include)
+
+# Examples
+add_subdirectory(example)

@@ -3,11 +3,13 @@
 #include <QDataStream>
 #include <QLoggingCategory>
 
+#include "Message.h"
+
 Q_LOGGING_CATEGORY(siyiMessageParser, "siyi.messageParser")
 
 namespace siyi {
 
-QVariant FirmwareMessageParser::parse(const QByteArray& data) {
+QVariant FirmwareMessageParser::parse(const QByteArray& data) const {
     qCDebug(siyiMessageParser) << "Parsing firmware message " << data.toHex();
 
     FirmwareMessage firmwareMessage;
@@ -19,7 +21,7 @@ QVariant FirmwareMessageParser::parse(const QByteArray& data) {
     return QVariant::fromValue(firmwareMessage);
 }
 
-QVariant HardwareIDMessageParser::parse(const QByteArray& data) {
+QVariant HardwareIDMessageParser::parse(const QByteArray& data) const {
     qCDebug(siyiMessageParser) << "Parsing hardware ID message " << data.toHex();
 
     HardwareIDMessage hardwareIDMessage;
@@ -32,7 +34,7 @@ QVariant HardwareIDMessageParser::parse(const QByteArray& data) {
     return QVariant::fromValue(hardwareIDMessage);
 }
 
-QVariant AutoFocusMessageParser::parse(const QByteArray& data) {
+QVariant AutoFocusMessageParser::parse(const QByteArray& data) const {
     qCDebug(siyiMessageParser) << "Parsing auto focus message " << data.toHex();
 
     AutoFocusMessage autoFocusMessage;
@@ -42,7 +44,7 @@ QVariant AutoFocusMessageParser::parse(const QByteArray& data) {
     return QVariant::fromValue(autoFocusMessage);
 }
 
-QVariant ManualZoomMessageParser::parse(const QByteArray& data) {
+QVariant ManualZoomMessageParser::parse(const QByteArray& data) const {
     qCDebug(siyiMessageParser) << "Parsing manual zoom message " << data.toHex();
 
     ManualZoomMessage manualZoomMessage;
@@ -52,7 +54,7 @@ QVariant ManualZoomMessageParser::parse(const QByteArray& data) {
     return QVariant::fromValue(manualZoomMessage);
 }
 
-QVariant AbsoluteZoomMessageParser::parse(const QByteArray& data) {
+QVariant AbsoluteZoomMessageParser::parse(const QByteArray& data) const {
     qCDebug(siyiMessageParser) << "Parsing absolute zoom message " << data.toHex();
 
     AbsoluteZoomMessage absoluteZoomMessage;
@@ -62,7 +64,7 @@ QVariant AbsoluteZoomMessageParser::parse(const QByteArray& data) {
     return QVariant::fromValue(absoluteZoomMessage);
 }
 
-QVariant ManualFocusMessageParser::parse(const QByteArray& data) {
+QVariant ManualFocusMessageParser::parse(const QByteArray& data) const {
     qCDebug(siyiMessageParser) << "Parsing manual focus message " << data.toHex();
 
     ManualFocusMessage manualFocusMessage;
@@ -72,7 +74,7 @@ QVariant ManualFocusMessageParser::parse(const QByteArray& data) {
     return QVariant::fromValue(manualFocusMessage);
 }
 
-QVariant GimbalRotationMessageParser::parse(const QByteArray& data) {
+QVariant GimbalRotationMessageParser::parse(const QByteArray& data) const {
     qCDebug(siyiMessageParser) << "Parsing gimbal rotation message " << data.toHex();
 
     GimbalRotationMessage gimbalRotationMessage;
@@ -82,7 +84,7 @@ QVariant GimbalRotationMessageParser::parse(const QByteArray& data) {
     return QVariant::fromValue(gimbalRotationMessage);
 }
 
-QVariant GimbalCenterMessageParser::parse(const QByteArray& data) {
+QVariant GimbalCenterMessageParser::parse(const QByteArray& data) const {
     qCDebug(siyiMessageParser) << "Parsing gimbal center message " << data.toHex();
 
     GimbalCenterMessage gimbalCenterMessage;
@@ -92,7 +94,7 @@ QVariant GimbalCenterMessageParser::parse(const QByteArray& data) {
     return QVariant::fromValue(gimbalCenterMessage);
 }
 
-QVariant FunctionFeedbackMessageParser::parse(const QByteArray& data) {
+QVariant FunctionFeedbackMessageParser::parse(const QByteArray& data) const {
     qCDebug(siyiMessageParser) << "Parsing function feedback message " << data.toHex();
 
     FunctionFeedbackMessage functionFeedbackMessage;
@@ -102,7 +104,7 @@ QVariant FunctionFeedbackMessageParser::parse(const QByteArray& data) {
     return QVariant::fromValue(functionFeedbackMessage);
 }
 
-QVariant GimbalAttitudeMessageParser::parse(const QByteArray& data) {
+QVariant GimbalAttitudeMessageParser::parse(const QByteArray& data) const {
     qCDebug(siyiMessageParser) << "Parsing gimbal attitude message " << data.toHex();
 
     GimbalAttitudeMessage gimbalAttitudeMessage;
@@ -114,7 +116,7 @@ QVariant GimbalAttitudeMessageParser::parse(const QByteArray& data) {
     return QVariant::fromValue(gimbalAttitudeMessage);
 }
 
-QVariant GimbalControlAngleMessageParser::parse(const QByteArray& data) {
+QVariant GimbalControlAngleMessageParser::parse(const QByteArray& data) const {
     qCDebug(siyiMessageParser) << "Parsing gimbal control angle message " << data.toHex();
 
     GimbalControlAngleMessage gimbalControlAngleMessage;
@@ -126,7 +128,7 @@ QVariant GimbalControlAngleMessageParser::parse(const QByteArray& data) {
     return QVariant::fromValue(gimbalControlAngleMessage);
 }
 
-QVariant CameraStatusInfoMessageParser::parse(const QByteArray& data) {
+QVariant CameraStatusInfoMessageParser::parse(const QByteArray& data) const {
     qCDebug(siyiMessageParser) << "Parsing camera status info message " << data.toHex();
 
     CameraStatusInfoMessage cameraStatusInfoMessage;
