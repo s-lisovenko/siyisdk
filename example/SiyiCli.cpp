@@ -10,7 +10,7 @@ int main(int argc, char* argv[]) {
     QCoreApplication app(argc, argv);
 
     // Initialize Siyi API with default IP and port
-    siyi::CameraApi& siyiApi = siyi::CameraApi::instance();
+    siyi::CameraApi siyiApi;
 
     // Check initialization
     if (!siyiApi.initialized()) {

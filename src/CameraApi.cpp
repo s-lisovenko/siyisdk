@@ -26,7 +26,6 @@ CameraApi::CameraApi(const QString& serverIp, quint16 port, QObject* parent)
 CameraApi::~CameraApi() {
     _siyiCommunicationWorkerThread.quit();
     _siyiCommunicationWorkerThread.wait();
-    delete _siyiCommunicationWorker;
 }
 
 void CameraApi::init(const QString& serverIp, quint16 port) {

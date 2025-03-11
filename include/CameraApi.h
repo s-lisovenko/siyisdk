@@ -33,12 +33,7 @@ public:
     CameraStatusInfoMessage cameraStatusInfoMessage;
 
 public:
-    // Instance singleton
-    static CameraApi& instance(const QString& serverIp = "192.168.144.25", quint16 port = 37260) {
-        static CameraApi instance(serverIp, port);
-        return instance;
-    }
-
+    explicit CameraApi(const QString& serverIp = "192.168.144.25", quint16 port = 37260, QObject* parent = nullptr);
     ~CameraApi() override;
 
     /**
@@ -107,8 +102,6 @@ protected:
     void timerEvent(QTimerEvent* e) override;
 
 private:
-    explicit CameraApi(const QString& serverIp = "192.168.144.25", quint16 port = 37260, QObject* parent = nullptr);
-
     /**
      * @brief Initialize Siyi API
      * @return True if initialization was successful, false otherwise
